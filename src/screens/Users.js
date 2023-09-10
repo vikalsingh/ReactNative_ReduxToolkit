@@ -1,5 +1,5 @@
 import {View, Text, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
-import {horizontalScale, moderateScale, verticalScale} from '../utils/Metrics';
+import {moderateScale, verticalScale} from '../utils/Metrics';
 import {Colors} from '../utils/Colors';
 import {useSelector, useDispatch} from 'react-redux';
 import { deleteUser } from '../redux/UserSlice';
@@ -7,17 +7,18 @@ import { deleteUser } from '../redux/UserSlice';
 const Users = ({navigation}) => {
   const users = useSelector(state => state.user?.userList);
   const dispatch = useDispatch();
-  console.log('list: ', users);
-  const handleEdit = (item, index) => {
-    navigation.navigate('AddUser', {type: 'edit', data: item, index: index});
+  const handleEdit = (item) => {
+    navigation.navigate('AddUser', {type: 'edit', data: item});
   };
-  const handleDelete = (index) => {
-    dispatch(deleteUser(index));
+  const handleDelete = (id) => {
+    dispatch(deleteUser(id));
   }
+  console.log('res');
   return (
     <View style={styles.container}>
       <FlatList
         data={users}
+        style={styles.flatlistStyle}
         renderItem={({item, index}) => {
           return (
             <View style={styles.userListView}>
@@ -40,10 +41,10 @@ const Users = ({navigation}) => {
                 </View>
               </View>
               <View>
-                <TouchableOpacity onPress={() => handleEdit(item, index)}>
+                <TouchableOpacity onPress={() => handleEdit(item)}>
                   <Text style={styles.editText}>Edit</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleDelete(index)}>
+                <TouchableOpacity onPress={() => handleDelete(item.id)}>
                   <Text style={styles.editText}>Delete</Text>
                 </TouchableOpacity>
               </View>
@@ -118,4 +119,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
   },
+  flatlistStyle: {
+    marginBottom: verticalScale(50)
+  }
 });

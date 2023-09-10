@@ -16,9 +16,7 @@ const {
 
 const AddUser = ({navigation}) => {
   const dispatch = useDispatch();
-  //   const {type, data, index} = route?.params;
   const route = useRoute();
-  //   console.log('edit---', route);
   const [name, setName] = useState(
     route.params?.type == 'edit' ? route.params.data.name : '',
   );
@@ -41,15 +39,16 @@ const AddUser = ({navigation}) => {
     if (route.params?.type == 'edit') {
       dispatch(
         editUser({
+          id: route.params.data.id,
           name: name,
           email: email,
           phone: phone,
           city: city,
-          index: route.params.index,
         }),
       );
     } else {
-      dispatch(addUser({name, email, phone, city}));
+      const id = Math.random();
+      dispatch(addUser({id, name, email, phone, city}));
     }
 
     navigation.goBack();
