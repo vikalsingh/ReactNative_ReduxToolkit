@@ -1,16 +1,19 @@
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import React from 'react';
+import React, {lazy, Suspense} from 'react';
 import Users from '../screens/Users';
 import AddUser from '../screens/AddUser';
 import {Colors} from '../utils/Colors';
 import Weather from '../screens/Weather';
 import {Image, View, Text, TouchableOpacity} from 'react-native';
 import Images from '../utils/images';
+import DataList from '../screens/DataList';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
+
+// const DataList = lazy(() => import('../screens/DataList'));
 
 const HomeStack = () => (
   <Stack.Navigator
@@ -54,6 +57,27 @@ const WeatherStack = () => (
     <Stack.Screen
       name="Weather"
       component={Weather}
+      options={{
+        headerShown: true,
+      }}
+    />
+  </Stack.Navigator>
+);
+
+const DataListStack = () => (
+  <Stack.Navigator
+    screenOptions={{
+      headerStyle: {
+        backgroundColor: Colors.orange,
+      },
+      headerTintColor: Colors.white,
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
+    }}>
+    <Stack.Screen
+      name="DataList"
+      component={DataList}
       options={{
         headerShown: true,
       }}
@@ -112,6 +136,14 @@ const AppNavigator = () => {
           component={WeatherStack}
           options={{
             tabBarIcon: Images.lightIcon,
+            headerShown: false,
+          }}
+        />
+        <Tab.Screen
+          name="DataList"
+          component={DataListStack}
+          options={{
+            tabBarIcon: Images.bellIcon,
             headerShown: false,
           }}
         />
