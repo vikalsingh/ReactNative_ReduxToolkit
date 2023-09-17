@@ -24,6 +24,7 @@ const Images = {
     lightIcon: require("../images/light.png"),
     dthIcon: require("../images/dth.png"),
     gasIcon: require("../images/gas.png"),
+    micIcon: require("../images/mic.png"),
   };
   
   export default Images;

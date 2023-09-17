@@ -9,6 +9,7 @@ import Weather from '../screens/Weather';
 import {Image, View, Text, TouchableOpacity} from 'react-native';
 import Images from '../utils/images';
 import DataList from '../screens/DataList';
+import SearchData from '../screens/SearchData';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -78,6 +79,13 @@ const DataListStack = () => (
     <Stack.Screen
       name="DataList"
       component={DataList}
+      options={{
+        headerShown: true,
+      }}
+    />
+    <Stack.Screen
+      name="SearchData"
+      component={SearchData}
       options={{
         headerShown: true,
       }}
