@@ -5,7 +5,7 @@ import React, {lazy, Suspense} from 'react';
 import Users from '../screens/Users';
 import AddUser from '../screens/AddUser';
 import {Colors} from '../utils/Colors';
-import Weather from '../screens/Weather';
+import Animation from '../screens/Animation';
 import {Image, View, Text, TouchableOpacity} from 'react-native';
 import Images from '../utils/images';
 import DataList from '../screens/DataList';
@@ -44,7 +44,7 @@ const HomeStack = () => (
   </Stack.Navigator>
 );
 
-const WeatherStack = () => (
+const AnimationStack = () => (
   <Stack.Navigator
     screenOptions={{
       headerStyle: {
@@ -56,8 +56,8 @@ const WeatherStack = () => (
       },
     }}>
     <Stack.Screen
-      name="Weather"
-      component={Weather}
+      name="Animation"
+      component={Animation}
       options={{
         headerShown: true,
       }}
@@ -140,8 +140,8 @@ const AppNavigator = () => {
           }}
         />
         <Tab.Screen
-          name="Weather"
-          component={WeatherStack}
+          name="Animation"
+          component={AnimationStack}
           options={{
             tabBarIcon: Images.lightIcon,
             headerShown: false,

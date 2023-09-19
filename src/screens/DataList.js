@@ -17,14 +17,63 @@ import Images from '../utils/images';
 import {useDispatch} from 'react-redux';
 import {addSearchData} from '../redux/searchSlice';
 import {useNavigation} from '@react-navigation/native';
+import {Config} from '../utils/Config';
+import openai from '../utils/openai';
 
 const DataList = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const [started, setStarted] = useState(false);
   const [ended, setEnded] = useState(false);
-  const [results, setResults] = useState([]);
+  const [searchResults, setSearchResults] = useState('');
   const [searchText, setSearchText] = useState('');
+  const apiKey = Config.CHATGPT_KEY;
+
+  const handleSearch = async () => {
+    const gptQuery = 'Suggest some data related to this text: ' + searchText;
+    const gptResults = await openai.completions.create({
+      model: 'text-davinci-003',
+      prompt: 'Say this is a team.',
+      max_tokens: 7,
+      temperature: 0,
+    });
+
+    // if (!gptResults.choices) {
+    //   // TODO: Write Error Handling
+    // }
+    console.log('GPT: ', gptResults);
+    // console.log(gptResults.choices?.[0]?.message?.content);
+    // const requestOptions = {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     Authorization: `Bearer ${apiKey}`,
+    //   },
+    //   body: JSON.stringify({
+    //     prompt: searchText,
+    //     max_tokens: 50, // Adjust the number of tokens as needed
+    //   }),
+    // };
+
+    // fetch(
+    //   'https://api.openai.com/v1/engines/davinci/completions',
+    //   requestOptions,
+    // )
+    //   .then(response => {
+    //     console.log("gpt response: ", response);
+    //     if (!response.ok) {
+    //       throw new Error('Network response was not ok');
+    //     }
+    //     return response.json();
+    //   })
+    //   .then(data => {
+    //     console.log("gpt: ", data);
+    //     setSearchResults(data.choices[0].text);
+    //   })
+    //   .catch(error => {
+    //     console.error('Error making API request:', error);
+    //   });
+  };
 
   useEffect(() => {
     Voice.onSpeechStart = onSpeechStart;
@@ -47,7 +96,6 @@ const DataList = () => {
   };
   const onSpeechResult = e => {
     console.log('fit in box: ', e.value, e.value[0]);
-    setResults(e.value);
     setSearchText(e.value[0]);
     dispatch(addSearchData(e.value[0]));
   };
@@ -56,7 +104,6 @@ const DataList = () => {
       await Voice.start('en-US');
       setStarted(false);
       setEnded(false);
-      setResults([]);
     } catch (error) {
       console.log(error);
     }
@@ -67,14 +114,10 @@ const DataList = () => {
       await Voice.destroy();
       setStarted(false);
       setEnded(false);
-      setResults([]);
       setSearchText('');
     } catch (error) {
       console.log(error);
     }
-  };
-  const handleSearch = () => {
-    console.log('se', searchText);
   };
 
   return (
@@ -99,29 +142,15 @@ const DataList = () => {
           />
         </TouchableOpacity>
       </View>
-      {/* <TouchableOpacity onPress={() => startVoiceRecognizing()}>
-        <Image source={Images.micIcon} style={styles.mic} />
-      </TouchableOpacity> */}
-
-      {/* <View style={styles.textAction}>
-        <Text>Started: {started ? 'S' : null}</Text>
-        <Text>Ended: {ended ? 'E' : null}</Text>
-      </View> */}
-      {/* <ScrollView style={styles.scroltext}>
-        {
-          results.map(item => {
-            return(
-              <Text style={styles.resultText}>{item}</Text>
-            )
-          })
-        }
-      </ScrollView> */}
       <View style={styles.buttonRow}>
         <TouchableOpacity
           onPress={() => {
             navigation.navigate('SearchData'), setSearchText('');
           }}>
           <Text style={styles.stopText}>Search Text</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => handleSearch()}>
+          <Text style={styles.stopText}>GPT</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => stopVoiceRecognizing()}>
           <Text style={styles.stopText}>Clear</Text>

@@ -2,18 +2,40 @@ import {View, Text, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
 import {moderateScale, verticalScale} from '../utils/Metrics';
 import {Colors} from '../utils/Colors';
 import {useSelector, useDispatch} from 'react-redux';
-import { deleteUser } from '../redux/UserSlice';
+import {deleteUser} from '../redux/UserSlice';
+import {
+  Gesture,
+  GestureDetector,
+  GestureHandlerRootView,
+} from 'react-native-gesture-handler';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 
 const Users = ({navigation}) => {
   const users = useSelector(state => state.user?.userList);
+  const pressed = useSharedValue(false);
   const dispatch = useDispatch();
-  const handleEdit = (item) => {
+  const handleEdit = item => {
     navigation.navigate('AddUser', {type: 'edit', data: item});
   };
-  const handleDelete = (id) => {
+  const handleDelete = id => {
     dispatch(deleteUser(id));
-  }
+  };
   console.log('res');
+  const tap = Gesture.Tap()
+    .onBegin(() => {
+      pressed.value = true;
+    })
+    .onFinalize(() => {
+      pressed.value = false;
+    });
+  const animatedStyles = useAnimatedStyle(() => ({
+    backgroundColor: pressed.value ? '#FFE04B' : '#B58DF1',
+    transform: [{scale: withTiming(pressed.value ? 1.2 : 1)}],
+  }));
   return (
     <View style={styles.container}>
       <FlatList
@@ -52,6 +74,14 @@ const Users = ({navigation}) => {
           );
         }}
       />
+      <GestureHandlerRootView style={styles.anim}>
+        <View style={styles.anim}>
+          <GestureDetector gesture={tap} >
+            <Animated.View style={[styles.circle, animatedStyles]} />
+          </GestureDetector>
+        </View>
+      </GestureHandlerRootView>
+
       <TouchableOpacity
         onPress={() => navigation.navigate('AddUser')}
         style={styles.bottomBtn}>
@@ -120,6 +150,17 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   flatlistStyle: {
-    marginBottom: verticalScale(50)
-  }
+    marginBottom: verticalScale(50),
+  },
+  anim: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
+  },
+  circle: {
+    height: 120,
+    width: 120,
+    borderRadius: 500,
+  },
 });
