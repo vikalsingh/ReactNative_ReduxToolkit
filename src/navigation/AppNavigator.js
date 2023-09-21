@@ -10,6 +10,7 @@ import {Image, View, Text, TouchableOpacity} from 'react-native';
 import Images from '../utils/images';
 import DataList from '../screens/DataList';
 import SearchData from '../screens/SearchData';
+import Quiz from '../screens/Quiz';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -92,6 +93,33 @@ const DataListStack = () => (
     />
   </Stack.Navigator>
 );
+const QuizStack = () => (
+  <Stack.Navigator
+    screenOptions={{
+      headerStyle: {
+        backgroundColor: Colors.orange,
+      },
+      headerTintColor: Colors.white,
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
+    }}>
+    <Stack.Screen
+      name="Quiz"
+      component={Quiz}
+      options={{
+        headerShown: true,
+      }}
+    />
+    {/* <Stack.Screen
+      name="SearchData"
+      component={SearchData}
+      options={{
+        headerShown: true,
+      }}
+    /> */}
+  </Stack.Navigator>
+);
 
 const CustomTabBar = ({state, descriptors, navigation}) => {
   return (
@@ -152,6 +180,14 @@ const AppNavigator = () => {
           component={DataListStack}
           options={{
             tabBarIcon: Images.bellIcon,
+            headerShown: false,
+          }}
+        />
+        <Tab.Screen
+          name="Quiz"
+          component={QuizStack}
+          options={{
+            tabBarIcon: Images.helpIcon,
             headerShown: false,
           }}
         />
